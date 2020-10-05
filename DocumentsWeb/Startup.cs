@@ -1,3 +1,6 @@
+using DocumentsWeb.Code.Parser;
+using DocumentsWeb.Code.Repository;
+using DocumentsWeb.Code.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +31,18 @@ namespace DocumentsWeb
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "", Version = "v1" });
+            });
+
+            services.AddSingleton(x => new DocumentsFileStorageOption() {
+                Directory = Configuration["FileDirectory"]
+            });
+            services.AddSingleton<IFileParser, FileParser>();
+            services.AddSingleton<IDocumentsStorage, DocumentsFileStorage>();
+            services.AddSingleton<IDocumentsRepository, DocumentsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +72,12 @@ namespace DocumentsWeb
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "");
+            });
+
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -66,6 +87,8 @@ namespace DocumentsWeb
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            
         }
     }
 }

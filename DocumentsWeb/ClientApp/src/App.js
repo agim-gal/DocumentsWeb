@@ -1,22 +1,17 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
+import React, { useState }  from 'react';
 import { Layout } from './components/Layout';
-import { Home } from './components/Home';
-import { FetchData } from './components/FetchData';
-import { Counter } from './components/Counter';
+import { LoadingProgress } from './components/LoadingProgress';
+import { Documents } from './components/Documents';
 
 import './custom.css'
 
-export default class App extends Component {
-  static displayName = App.name;
-
-  render () {
+export default function App() {
+    const [itemLoadingCount, setItemLoadingCount] = useState(0);
+  
     return (
-      <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data' component={FetchData} />
-      </Layout>
+        <Layout>
+            <LoadingProgress dataUpdateCallback={(x) => setItemLoadingCount(x)}/>
+            <Documents itemLoadingCount={itemLoadingCount} />
+        </Layout>
     );
-  }
 }
