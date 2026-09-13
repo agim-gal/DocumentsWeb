@@ -1,0 +1,11 @@
+{
+  "name": "DocumentsWeb",
+  "install": "bash .cursor/install.sh",
+  "terminals": [
+    {
+      "name": "DocumentsWeb",
+      "command": "bash .cursor/start.sh"
+    }
+  ],
+  "ports": [5000, 5001]
+}
